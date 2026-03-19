@@ -17,20 +17,20 @@ A good practice may be to define the `$HOME/local` directory as the input.
 Furthermore, we need to add its binaries and libraries in the `PATH` and `LD_LIBRARY` 
 libraries respectively.
 ```
-export PATH=$PATH:/home/asmithclark91/gsl/bin
-export LD_LIBRARY_PATH=/home/asmithclark91/gsl/lib:$LD_LIBRARY_PATH
+export PATH=$PATH:$HOME/gsl/bin
+export LD_LIBRARY_PATH=$HOME/gsl/lib:$LD_LIBRARY_PATH
 ```
 Make sure that is correctly installed by checking `gsl-config --prefix`. It should point
 to the directory that is currently located the `gsl-config` binary file.
 
 ## Download Lorene
 
-To download Lorene we need to execute the `download.sh` script located in `batchtools/athenak/templates/lorene`.
+To download Lorene we need to execute the `download.sh` script located in `batchtools/templates/lorene`.
 This will generate the tarball `Lorene.tar` that needs to be unzipped as:
 ```
 tar -xvf Lorene.tar
 ```
-Creating the `Lorene` directory inside `batchtools/athenak/templates/lorene`. 
+Creating the `Lorene` directory inside `batchtools/templates/lorene`. 
 This is a very important step, otherwise the patching process will corrupt. If this
 happens, delete the `Lorene/` folder and repeat this step.
 
