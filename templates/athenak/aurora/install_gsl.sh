@@ -4,7 +4,7 @@ set -e  # Exit immediately if a command exits with a non-zero status
 set -o pipefail  # Prevent errors in a pipeline from being masked
 set -u  # Treat unset variables as an error
 
-GSL_VERSION="2.5"  # Update this to the latest version if necessary
+GSL_VERSION="2.7"  # Update this to the latest version if necessary
 GSL_URL="https://ftp.gnu.org/gnu/gsl/gsl-${GSL_VERSION}.tar.gz"
 
 if [ -z "${1:-}" ]; then
@@ -12,7 +12,7 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
-INSTALL_DIR=$1
+INSTALL_DIR=$1/local/gsl
 mkdir -p "$INSTALL_DIR"
 INSTALL_DIR=$(cd $INSTALL_DIR ; pwd)
 
