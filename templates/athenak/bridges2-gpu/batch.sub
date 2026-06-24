@@ -1,0 +1,53 @@
+#!/bin/bash
+@(#SBATCH -d afterok:@CHAINED_JOB_ID@)@
+#SBATCH -p @QUEUE@
+#SBATCH -A @ALLOCATION@ 
+#SBATCH -t @WALLTIME@
+#SBATCH -N @NODES@
+#SBATCH --gpus=v100-32:@NUM_GPUS@
+#SBATCH -J @SIMULATION_NAME@
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=@EMAIL@
+#SBATCH -o @RUNDIR@/@SIMULATION_NAME@.out
+#SBATCH -e @RUNDIR@/@SIMULATION_NAME@.err
+#SBATCH --gpu-bind=none
+
+echo "Preparing:"
+set -x                          # Output commands
+set -e                          # Abort on errors
+cd @RUNDIR@
+
+module purge
+module load cuda/12.6.1
+module load openmpi/4.0.5-nvhpc22.9
+
+export OMP_NUM_THREADS=@NUM_THREADS@
+
+echo "Checking:"
+pwd
+hostname
+date
+
+echo "Environment:"
+env | sort > ENVIRONMENT
+echo ${SLURM_NODELIST} > NODES
+
+# Check for restart files
+if [ -d parent/rst ]; then
+  restart_files=$(ls -r parent/rst/*.rst)
+  restart_file=(${restart_files[0]})
+  restart_line="-r $restart_file -i @PARFILE@"
+  printf "\nrestarting from $restart_file\n\n"
+else
+  restart_line="-i @PARFILE@"
+  printf "\nstarting from beginning\n\n"
+fi
+
+# set up problem and define any environment variables here
+export SLURM_CPU_BIND="cores"
+mpirun -n @NUM_GPUS@ \
+     @EXECUTABLE@ \
+    --kokkos-map-device-id-by=mpi_rank \
+    -d @RUNDIR@ \
+    -t @TERMINATION_TIME@ \
+    $restart_line
