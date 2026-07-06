@@ -18,7 +18,11 @@ set -x              # Output commands
 set -e              # Abort on errors
 cd @RUNDIR@
 
+module load boost/1.88.0
+module load fftw/3.3.10                      # MPI-enabled FFTW3 build
+
 # Set environment
+export HOME_KADATH=$HOME/kyoto-initiative/repos/fuka
 NTHREADS=@NUM_THREADS@    # Number of OMP threads per rank
 NNODES=@NODES@            # Number of Nodes
 NRANKS=@NUM_GPUS@         # Number of MPI ranks per node (assume one per GPU)
